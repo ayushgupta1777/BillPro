@@ -18,7 +18,7 @@ export function AppShell() {
     <div className="app-layout">
       <aside className="sidebar">
         <div className="sidebar-header">
-          <h2>Billora</h2>
+          <h2>BillPro</h2>
         </div>
         <nav className="sidebar-nav">
           {navItems.map((item) => (

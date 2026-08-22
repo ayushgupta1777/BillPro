@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { db, BillItem, Customer, Item } from '../db/schema';
 import { calculateBillTotals, calculateRowAmount } from '../utils/calculations';
 import { Plus, Trash2, Save, Printer } from 'lucide-react';
+import { pdf } from '@react-pdf/renderer';
+import { InvoicePDF } from '../components/InvoicePDF';
 import './NewBill.css';
 
 export function NewBill() {
@@ -114,10 +116,6 @@ export function NewBill() {
     const date = new Date().toLocaleDateString();
 
     try {
-      // Import dynamically
-      const { pdf } = await import('@react-pdf/renderer');
-      const { InvoicePDF } = await import('../components/InvoicePDF');
-      
       const blob = await pdf(
         <InvoicePDF 
           invoiceNumber={invoiceNumber}
