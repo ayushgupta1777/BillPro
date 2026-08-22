@@ -5,7 +5,7 @@ import { BillItem } from '../db/schema';
 // Register the Hindi font
 Font.register({
   family: 'NotoSansDevanagari',
-  src: '/src/assets/fonts/NotoSansDevanagari-Regular.ttf'
+  src: '/fonts/NotoSansDevanagari-Regular.ttf'
 });
 
 const MAROON = '#761219';
