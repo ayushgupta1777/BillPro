@@ -2,10 +2,12 @@ import React from 'react';
 import { Page, Text, View, Document, StyleSheet, Font } from '@react-pdf/renderer';
 import { BillItem } from '../db/schema';
 
+import notoSansFont from '../assets/fonts/NotoSansDevanagari-Regular.ttf';
+
 // Register the Hindi font
 Font.register({
   family: 'NotoSansDevanagari',
-  src: '/fonts/NotoSansDevanagari-Regular.ttf'
+  src: notoSansFont
 });
 
 const MAROON = '#761219';
