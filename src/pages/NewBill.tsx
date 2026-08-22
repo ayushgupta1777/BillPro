@@ -184,6 +184,9 @@ export function NewBill() {
           }}>
             Download PDF
           </button>
+          <button className="btn btn-outline" onClick={() => navigate('/')}>
+            Home
+          </button>
           <button className="btn btn-outline" onClick={resetForm}>
             Create Another Bill
           </button>
