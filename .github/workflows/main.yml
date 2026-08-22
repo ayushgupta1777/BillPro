@@ -23,7 +23,7 @@ jobs:
           targets: x86_64-pc-windows-msvc
 
       - name: Install Dependencies
-        working-directory: ./app
+        working-directory: ./BillPro/app
         run: npm install
 
       - name: Build Tauri App
