@@ -9,6 +9,7 @@ export function History() {
   const [bills, setBills] = useState<Bill[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [viewPdfBlob, setViewPdfBlob] = useState<string | null>(null);
 
   useEffect(() => {
     loadBills();
@@ -54,19 +55,7 @@ export function History() {
       ).toBlob();
 
       const blobUrl = URL.createObjectURL(blob);
-      
-      // Iframe print logic
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = blobUrl;
-      document.body.appendChild(iframe);
-      iframe.onload = () => {
-        try {
-          iframe.contentWindow?.print();
-        } catch (e) {
-          window.open(blobUrl, '_blank');
-        }
-      };
+      setViewPdfBlob(blobUrl);
     } catch (err) {
       console.error("Failed to regenerate PDF", err);
       alert("Failed to regenerate PDF");
@@ -89,6 +78,28 @@ export function History() {
   };
 
   if (loading) return <div>Loading history...</div>;
+
+  if (viewPdfBlob) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999, background: '#f9fafb' }}>
+        <div style={{ padding: '1rem', display: 'flex', gap: '1rem', background: 'white', borderBottom: '1px solid #e5e7eb', alignItems: 'center' }}>
+          <h2 style={{ margin: 0, flex: 1, color: '#111827' }}>Invoice Viewer</h2>
+          <button className="btn btn-primary" onClick={() => {
+            const a = document.createElement('a');
+            a.href = viewPdfBlob;
+            a.download = `Invoice_Reprint.pdf`;
+            a.click();
+          }}>
+            Download PDF
+          </button>
+          <button className="btn btn-outline" onClick={() => setViewPdfBlob(null)}>
+            Back to History
+          </button>
+        </div>
+        <iframe src={viewPdfBlob} style={{ width: '100%', height: '100%', border: 'none' }} title="Invoice PDF Viewer" />
+      </div>
+    );
+  }
 
   return (
     <div className="page-container">

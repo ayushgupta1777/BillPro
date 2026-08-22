@@ -157,42 +157,11 @@ export function NewBill() {
         await db.clearDraft();
       } catch (e) {}
       
-      // Auto-trigger print
-      setTimeout(() => {
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = blobUrl;
-        document.body.appendChild(iframe);
-        iframe.onload = () => {
-          try {
-            iframe.contentWindow?.print();
-          } catch (e) {
-            console.error("Print failed, falling back to window.open", e);
-            window.open(blobUrl, '_blank');
-          }
-        };
-      }, 100);
+      // Auto-trigger print removed to prevent Tauri crash. User will use the built-in PDF viewer.
       
     } catch (err) {
       console.error("PDF Generation failed", err);
       alert("Failed to generate PDF. Check console.");
-    }
-  };
-
-  const openPdf = () => {
-    if (generatedPdfBlob) {
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = generatedPdfBlob;
-      document.body.appendChild(iframe);
-      iframe.onload = () => {
-        try {
-          iframe.contentWindow?.print();
-        } catch (e) {
-          console.error("Print failed, falling back to window.open", e);
-          window.open(generatedPdfBlob, '_blank');
-        }
-      };
     }
   };
 
@@ -204,22 +173,22 @@ export function NewBill() {
 
   if (generatedPdfBlob) {
     return (
-      <div className="new-bill-container" style={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-        <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
-          <h2 style={{ color: 'var(--color-success)', marginBottom: '1rem' }}>✓ Bill Generated</h2>
-          <p className="text-muted" style={{ marginBottom: '2rem' }}>The invoice has been finalized and saved safely.</p>
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-            <button className="btn btn-primary" onClick={openPdf}>
-              <Printer size={18} /> Print
-            </button>
-            <button className="btn btn-outline" onClick={() => navigate('/')}>
-              Home
-            </button>
-            <button className="btn btn-outline" onClick={resetForm}>
-              New Bill
-            </button>
-          </div>
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', backgroundColor: '#f9fafb' }}>
+        <div style={{ padding: '1rem', display: 'flex', gap: '1rem', background: 'white', borderBottom: '1px solid #e5e7eb', alignItems: 'center' }}>
+          <h2 style={{ margin: 0, flex: 1, color: '#111827' }}>Invoice Generated</h2>
+          <button className="btn btn-primary" onClick={() => {
+            const a = document.createElement('a');
+            a.href = generatedPdfBlob;
+            a.download = `Invoice_${customerName}.pdf`;
+            a.click();
+          }}>
+            Download PDF
+          </button>
+          <button className="btn btn-outline" onClick={resetForm}>
+            Create Another Bill
+          </button>
         </div>
+        <iframe src={generatedPdfBlob} style={{ width: '100%', flex: 1, border: 'none' }} title="Invoice PDF Viewer" />
       </div>
     );
   }
